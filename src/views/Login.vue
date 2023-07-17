@@ -1,7 +1,6 @@
 <template lang="">
   <div class="container" style="margin-top: 30px">
 
-<h1 @click="increment">{{counter}}</h1>
     <div class="field">
       <p class="control has-icons-left has-icons-right">
         <input v-model="name" class="input" type="text" placeholder="Email" />
