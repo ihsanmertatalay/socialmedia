@@ -3,7 +3,7 @@
 
     <div class="field">
       <p class="control has-icons-left has-icons-right">
-        <input v-model="name" class="input" type="text" placeholder="Email" />
+        <input v-model="name" class="input" type="text" placeholder="Name" />
         <span class="icon is-small is-left">
           <i class="fas fa-envelope"></i>
         </span>
