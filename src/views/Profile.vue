@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute, RouterView } from "vue-router";
 
 const posts = ref([]);
-const Apiurl = "http://localhost:3000/posts";
+const Apiurl = "https://ihsan.onrender.com/posts";
 const router = useRouter();
 const route = useRoute();
 const myuser = ref([]);

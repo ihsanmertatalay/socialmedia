@@ -70,7 +70,7 @@ const isLogin = ref(false);
 const name = ref("");
 const passvalue = ref();
 const exist = ref(false);
-const Apiurl = "http://localhost:3000/posts/user";
+const Apiurl = "https://ihsan.onrender.com/posts/user";
 const router = useRouter();
 const myid = ref();
 const store = useStore();
@@ -145,7 +145,7 @@ async function submitForm() {
   const formData = new FormData();
   formData.append("myphoto", file);
   console.log(formData);
-  const response = await fetch("http://localhost:3000/posts/photo", {
+  const response = await fetch("https://ihsan.onrender.com/posts/photo", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

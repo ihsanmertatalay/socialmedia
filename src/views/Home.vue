@@ -6,7 +6,7 @@ import { useStore } from "vuex";
 const posts = ref([]);
 const routerViewKey = ref();
 const nums = ref([]);
-const Apiurl = "http://localhost:3000/posts";
+const Apiurl = "https://ihsan.onrender.com/posts";
 const router = useRouter();
 const route = useRoute();
 const myuser = ref([]);

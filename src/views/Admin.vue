@@ -42,7 +42,7 @@ import { useRouter } from "vue-router";
 
 const users = ref([]);
 const posts = ref([]);
-const Apiurl = "http://localhost:3000/posts";
+const Apiurl = "https://ihsan.onrender.com/posts";
 const router = useRouter();
 
 async function getUsers() {
