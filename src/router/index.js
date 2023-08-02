@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Profile from "../views/Profile.vue";
+import Profile2 from "../views/Profile2.vue";
 import HomeLand from "../views/HomeLand.vue";
 import Messages from "../views/Messages.vue";
 import Create from "../views/Create.vue";
@@ -47,18 +48,13 @@ const router = createRouter({
           path: "messages",
           component: Messages,
         },
+        {
+          path: ":id2",
+          component: Profile2,
+        },
       ],
     },
-    {
-      path: "/update/:id",
-      name: "update",
-      component: Update,
-    },
-    {
-      path: "/create",
-      name: "create",
-      component: Create,
-    },
+  
   ],
 });
 

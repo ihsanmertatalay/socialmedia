@@ -1,6 +1,5 @@
 <template lang="">
   <div class="container" style="margin-top: 30px">
-
     <div class="field">
       <p class="control has-icons-left has-icons-right">
         <input v-model="name" class="input" type="text" placeholder="Name" />
@@ -59,10 +58,13 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted ,computed} from "vue";
+import { ref, onMounted,onUnmounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import {  useStore } from 'vuex';
+import { useStore } from "vuex";
+import io from "socket.io-client"; // Import socket.io-client library
+
+
 
 const users = ref([]);
 const isLogin = ref(false);
@@ -74,10 +76,11 @@ const router = useRouter();
 const myid = ref();
 const store = useStore();
 const toast = useToast();
+const socket = io("http://localhost:3000"); 
 
 
 const counter = computed(() => store.getters.getCounter);
-const increment = () => store.dispatch('increment');
+const increment = () => store.dispatch("increment");
 
 async function getUsers() {
   const response = await fetch(Apiurl);
@@ -86,7 +89,6 @@ async function getUsers() {
 }
 
 async function login() {
-
   getUsers();
   users.value.forEach((user) => {
     if (user.email == name.value && user.password == passvalue.value) {
@@ -135,6 +137,7 @@ async function signup() {
   });
   name.value = "";
   passvalue.value = "";
+  getUsers();
 }
 
 async function submitForm() {
@@ -166,6 +169,9 @@ async function submitForm() {
 
 onMounted(() => {
   getUsers();
+  
 });
+
+
 </script>
 <style lang=""></style>

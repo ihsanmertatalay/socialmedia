@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted,onUnmounted } from "vue";
 import { useRouter, useRoute, RouterView } from "vue-router";
 
 const Apiurl = "https://ihsan.onrender.com/posts";
@@ -8,6 +8,16 @@ const route = useRoute();
 const myuser = ref([]);
 const chat = ref("");
 const message = ref("");
+const theuser = ref({
+  email: '',
+  password: '',
+  photo: null,
+  friends: [],
+  posts: [],
+  messages: [],
+  image: '',
+});
+      const id2 = ref();
 
 const users = ref([])
 
@@ -26,7 +36,11 @@ async function getUser() {
 }
 
 async function sendMessage(to) {
+  if(message.value){
+    
   const { id } = route.params;
+  await getUser()
+  await getUsers()
 
   const messageObj = {
     from: myuser.value.email,
@@ -34,8 +48,8 @@ async function sendMessage(to) {
     content: message.value,
     messageDate: new Date(),
   };
-  myuser.value.messages.push(messageObj);
 
+  myuser.value.messages.push(messageObj);
   const response = await fetch(Apiurl + "/user/" + id, {
     method: "PUT",
     headers: {
@@ -46,29 +60,40 @@ async function sendMessage(to) {
     }),
   });
 
-  const  theuser =  users.value.find(theuser => theuser.email === to)
-  const id2 = theuser._id
-  console.log(theuser);
+  
+  theuser.value =  users.value.find(theuser => theuser.email === to)
+  id2.value = theuser.value._id
 
 
-theuser.messages.push(messageObj);
 
-const response2 = await fetch(Apiurl + "/user/" + id2, {
+  theuser.value.messages.push(messageObj);
+
+const response2 = await fetch(Apiurl + "/user/" + id2.value, {
   method: "PUT",
   headers: {
     "content-type": "application/json",
   },
   body: JSON.stringify({
-    messages: theuser.messages,
+    messages: theuser.value.messages,
   }),
 });
-
-  getUser()
+getUser()
+getUsers()
+message.value = ""
+  }
 }
 
 onMounted(() => {
   getUser();
   getUsers();
+  const interval = setInterval(() => {
+    getUser();
+    console.log("111");
+  }, 1000);
+
+  onUnmounted(() => {
+    clearInterval(interval);
+  });
 });
 </script>
 
@@ -84,9 +109,9 @@ onMounted(() => {
 
       <p class="title is-1" style="text-align: center">Messages</p>
       <p class="title is-2" style="text-align: center">Friends</p>
+      
       <div style="display: flex; flex-direction: column; ">
-        <div
-          v-for="friend in myuser.friends"
+        <div     v-for="friend in myuser.friends"
           :key="friend._id"
           style="
             display: flex;
@@ -94,26 +119,46 @@ onMounted(() => {
             border: 1px solid gray;
             margin: 10px 0;
             padding: 5px;
-          "
-        >
+           
+            "
+          >
           <button
             @click="chat = friend.name; message = '' "
             class="button my-1"
-            style="width: 100px; margin: auto;"
+            style="width: 100px; margin: auto; "
+            
           >
             {{ friend.name }}
           </button>
-          <p v-if="chat == friend.name " >
+        <div
+        v-if="chat == friend.name " 
+          style="
+           max-height: 300px;
+            overflow: auto;
+            display: flex;
+            flex-direction: column-reverse;
+            border: 1px rgb(207, 205, 205) solid;
+        "
+        >
+        
+
+         
+          <p v-if="chat == friend.name "  >
             <p v-for="themessage in myuser.messages">
-              <p v-if="themessage.to == friend.name || themessage.from ==  friend.name" style="padding: 3px 10px; margin: 5px; border-radius: 5px; float: right; clear: both;" :style="{ backgroundColor: themessage.to === friend.name ? 'lightgreen' : 'lightgray' ,  float: themessage.to === friend.name ? 'right' : 'left' }" >{{ themessage.content }}</p>
+                            <p v-if="themessage.to == friend.name || themessage.from ==  friend.name" style="padding: 3px 10px; margin: 5px; border-radius: 5px; float: right; clear: both;" :style="{ backgroundColor: themessage.to === friend.name ? 'lightgreen' : 'lightgray' ,  float: themessage.to === friend.name ? 'right' : 'left' }" >{{ themessage.content }}</p>
+
             </p>
             
           
           </p>
 
+      
+         
+        </div>
 
-          <input style="width: 200px; margin: auto;" v-model="message" v-if="chat == friend.name" type="text" />
-          <button
+        <input style="width: 80%; height: 50px; margin: 20px auto 0px;" v-model="message" v-if="chat == friend.name" placeholder="mesaj gönder" type="text"  @keyup.enter="sendMessage(friend.name )"/>
+
+        <button
           style="width: 200px; margin: 10px auto;" 
             @click="sendMessage(friend.name )"
             v-if="chat == friend.name"
@@ -121,7 +166,8 @@ onMounted(() => {
           >
             Gönder
           </button>
-        </div>
+
+      </div>
       </div>
     </div>
   </main>

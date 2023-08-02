@@ -111,11 +111,7 @@ async function editPost(_id) {
 
 onMounted(() => {
   getPosts();
-  getNums();async function getNums() {
-  const response = await fetch(Apiurl + "/n");
-  const json = await response.json();
-  nums.value = json;
-}
+
   getUser();
 });
 </script>

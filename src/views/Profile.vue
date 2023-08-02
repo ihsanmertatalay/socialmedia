@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute, RouterView } from "vue-router";
 
 const posts = ref([]);
@@ -23,7 +23,6 @@ async function getUser() {
   myuser.value = json;
 }
 
-
 async function addImage() {
   const { id } = route.params;
   const response = await fetch(Apiurl + "/user/" + id, {
@@ -38,10 +37,10 @@ async function addImage() {
   getUser();
 }
 
-
 onMounted(() => {
   getPosts();
   getUser();
+  
 });
 </script>
 
@@ -55,19 +54,30 @@ onMounted(() => {
         <button class="button is-info mx-5">Messages</button></router-link
       >
       <p class="title is-1" style="text-align: center">Profile Page</p>
-      
-        <div class="container" style="display: flex; align-items: center ; ">
-          <img
-        v-if="!myuser.image"
-        src="https://bulma.io/images/placeholders/96x96.png"
-        alt="Placeholder image"
-      />
-      <img v-if="myuser.image" :src="myuser.image" alt="profile image" style="width: 100px;  height: 100px; " />
-      <label for="myimage">Profile Photo</label>
-      <input v-model="myuser.image" name="myimage" :src="myuser.image"  type="url" placeholder="enter image url"  style="margin: 20px;"/>
-      <button @click="addImage" class="button is-warning ">Submit</button>
 
-        </div>
+      <div class="container" style="display: flex; align-items: center">
+        <img
+          v-if="!myuser.image"
+          src="https://bulma.io/images/placeholders/96x96.png"
+          alt="Placeholder image"
+        />
+        <img
+          v-if="myuser.image"
+          :src="myuser.image"
+          alt="profile image"
+          style="width: 100px; height: 100px"
+        />
+        <label for="myimage">Profile Photo</label>
+        <input
+          v-model="myuser.image"
+          name="myimage"
+          :src="myuser.image"
+          type="url"
+          placeholder="enter image url"
+          style="margin: 20px"
+        />
+        <button @click="addImage" class="button is-warning">Submit</button>
+      </div>
 
       <p class="title is-1" style="text-align: center">My Posts</p>
       <div class="card m-5" v-for="post in myuser.posts" :key="post._id">

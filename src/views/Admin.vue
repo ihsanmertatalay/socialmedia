@@ -1,6 +1,7 @@
 <template lang="">
   <div class="container">
     <br />
+    <button @click="clearMessages">clear messages</button>
     <h1>Admin Panel</h1>
 
     <table
@@ -13,6 +14,7 @@
           <th style="text-align: center">Password</th>
           <th style="text-align: center">Post Count</th>
           <th style="text-align: center">Friends</th>
+          <th style="text-align: center">Message Count</th>
           <th></th>
         </tr>
       </thead>
@@ -24,10 +26,16 @@
           <td>{{ user.posts.length }}</td>
           <td>
             <div v-for="friend in user.friends">
-            {{friend.name}}
-            </div></td>
+              {{ friend.name }}
+            </div>
+          </td>
+          <td>{{ user.messages.length }}</td>
+
           <td>
-            <button @click="deleteUser(user._id,user.email)" class="button is-danger">
+            <button
+              @click="deleteUser(user._id, user.email)"
+              class="button is-danger"
+            >
               Delete
             </button>
           </td>
@@ -51,29 +59,46 @@ async function getUsers() {
   users.value = json;
 }
 
+async function updateUsers() {
+  const response = await fetch(Apiurl  + "/user", {
+    method: "PUT",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(users.value),
+  });
+}
+
+
 async function getPosts() {
-  const response = await fetch(Apiurl );
+  const response = await fetch(Apiurl);
   const json = await response.json();
   posts.value = json;
 }
 
-async function deleteUser(id,email) {
+async function deleteUser(id, email) {
   const response = await fetch(Apiurl + "/user/" + id, {
     method: "DELETE",
   });
 
-  posts.value.forEach(post => {
-    
-      if (post.creator == email) {
-        const response2 =  fetch(Apiurl +"/"+ post._id, {
-    method: "DELETE",
+  posts.value.forEach((post) => {
+    if (post.creator == email) {
+      const response2 = fetch(Apiurl + "/" + post._id, {
+        method: "DELETE",
+      });
+    }
   });
-      }
-  });
-
-
 
   getUsers();
+}
+
+
+async function clearMessages() {
+  for (const index in users.value) {
+    users.value[index].messages=[]
+  }
+  updateUsers()
+
 }
 
 onMounted(() => {
