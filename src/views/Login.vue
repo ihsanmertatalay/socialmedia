@@ -62,7 +62,6 @@ import { ref, onMounted,onUnmounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { useStore } from "vuex";
-import io from "socket.io-client"; // Import socket.io-client library
 
 
 
@@ -76,7 +75,6 @@ const router = useRouter();
 const myid = ref();
 const store = useStore();
 const toast = useToast();
-const socket = io("http://localhost:3000"); 
 
 
 const counter = computed(() => store.getters.getCounter);
